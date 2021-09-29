@@ -66,7 +66,7 @@ for player in response_rank:
         game_stats={}
         game_stats['gameDuration']=match_detail["info"]["gameDuration"]
         game_stats['gameMode']=match_detail["info"]["gameMode"]
-        game_stats['gameStartTimestamp']= datetime.fromtimestamp(match_detail["info"]["gameMode"])
+        game_stats['gameStartTimestamp']= datetime.fromtimestamp(match_detail["info"]["gameStartTimestampddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"])
 
 
 
