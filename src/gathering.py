@@ -27,8 +27,19 @@ tier = ["CHALLENGER", "GRANDMASTER","MASTER", "DIAMOND", "PLATINUM", "GOLD", "SI
 division = ["I", "II", "III", "IV"]
 platform = ["br1","eun1","euw1","jp1","kr","la1","la2","na1","oc1","ru","tr1"]
 region = ["europe","asia","americas"]
-url_rank = f"https://euw1.api.riotgames.com/lol/league-exp/v4/entries/{queue}/SILVER/IV?page=1&api_key={API_KEY}"
 
+
+players_list = []
+for tir in tier[3:]:
+    for div in division:
+        n=1000
+        players_list += (fn.players_rank(tir,div,n))
+for tir in tier[:3]:
+    players_list += (fn.players_rank(tir,"I",n))
+
+for ind,player in enumerate(players_list):
+    players_list[ind] = fn.get_puuid(player)
+    players_list[ind] = fn.
 
 ## make for loop to gather player data
 
