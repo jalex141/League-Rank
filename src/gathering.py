@@ -9,12 +9,8 @@ from datetime import datetime
 import sys
 sys.path.append('../')
 from config import *
-
 from src import functions as fn 
-from pymongo import MongoClient
-client = MongoClient("localhost:27017")
-db = client.get_database("LeagueRank")
-c = db.get_collection("players")
+
 
 
 
@@ -30,7 +26,9 @@ for tir in tier[:3]:
     print(tir, " done")
     print(len(players_list), " players")
 print("base list ", len(players_list)," players")
-
+with open(f'../data/players_list.json', 'w') as f:
+    json.dump(players_list,f)
+print("done")
 
 for ind,player in enumerate(players_list):
     if fn.get_puuid(player)== []:
@@ -45,8 +43,8 @@ for ind,player in enumerate(players_list):
         if (ind+1)%10 == 0:
             print(ind+1," players info fixed")
 
-players_list.to_json("../data/players_sample", orient="records")
-print("done")
+with open(f'../data/players_sample.json', 'w') as f:
+    json.dump(players_list,f)print("done")
 """
 mongoimport --db LeagueRank --collection players --jsonArray players_sample
 
