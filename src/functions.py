@@ -56,14 +56,16 @@ def usefull_info(player):
     returns dic with data I can use 
     """
     player_new={}
-    player_new['tier'] = player['tier']
-    player_new['rank'] = player['rank']
+    player_new['puuid'] = player['puuid']
     player_new['summonerName'] = player['summonerName']
+    player_new['tier'] = player['tier']
+    player_new['division'] = player['rank']
     player_new['leaguePoints'] = player['leaguePoints']
     player_new['wins'] = player['wins']
     player_new['losses'] = player['losses']
     player_new['veteran'] = player['veteran']
-    player_new['puuid'] = player['puuid']
+    player_new['freshBlood'] = player['freshBlood']
+    player_new['hotStreak'] = player['hotStreak']
     player_new['summonerLevel'] = player['summonerLevel']
     return player_new
 
@@ -84,16 +86,12 @@ def api_call(url):
     takes an url
     returns a response json
     """
-    
     response_riot = requests.get(f"{url}")
-    time.sleep(0.1)
 
     while response_riot.status_code != 200:
-        time.sleep(1)
-        response_riot = requests.get(f"{url}")
         if response_riot.status_code == 429:
-            print(f"{response_riot} time sleep")
-            time.sleep(120)
+            print(f"{response_riot} {response_riot.headers['Retry-After']}")
+            time.sleep(int(response_riot.headers['Retry-After']))
             response_riot = requests.get(f"{url}")
         
         if response_riot.status_code != 429 and response_riot.status_code != 200:

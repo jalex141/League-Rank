@@ -13,38 +13,48 @@ from src import functions as fn
 
 
 
+def get_list():
+    players_list = []
+    for tir in tier[3:]:
+        for div in division:
+            n=1000
+            players_list += (fn.players_rank(tir,div,n))
+        print(tir, " done")
+        print(len(players_list), " players")
+    for tir in tier[:3]:
+        players_list += (fn.players_rank(tir,"I",n))
+        print(tir, " done")
+        print(len(players_list), " players")
+    print("base list ", len(players_list)," players")
+    with open(f'../data/players_list.json', 'w') as f:
+        json.dump(players_list,f)
+    print("done")
+    return players_list
 
-players_list = []
-for tir in tier[3:]:
-    for div in division:
-        n=1000
-        players_list += (fn.players_rank(tir,div,n))
-    print(tir, " done")
-    print(len(players_list), " players")
-for tir in tier[:3]:
-    players_list += (fn.players_rank(tir,"I",n))
-    print(tir, " done")
-    print(len(players_list), " players")
-print("base list ", len(players_list)," players")
-with open(f'../data/players_list.json', 'w') as f:
-    json.dump(players_list,f)
-print("done")
 
-for ind,player in enumerate(players_list):
-    if fn.get_puuid(player)== []:
-        print(f"player {player['summonerName']} no longer exists")
-        players_list.remove(player)
+def build_list(players_list):
+    players = []
 
-    else:
-        players_list[ind] = fn.get_puuid(player)
-        players_list[ind] = fn.get_games_list(player)
-        players_list[ind] = fn.usefull_info(player)
-        
-        if (ind+1)%10 == 0:
-            print(ind+1," players info fixed")
+    for ind,player in enumerate(players_list):
+        if fn.get_puuid(player)== []:
+            print(f"player {player['summonerName']} no longer exists")
+            #players_list.remove(player)
 
-with open(f'../data/players_sample.json', 'w') as f:
-    json.dump(players_list,f)print("done")
+        else:
+            players.append(fn.get_puuid(player))
+            players.append(fn.get_games_list(player))
+            #players_list[ind] = fn.usefull_info(player)
+            
+            if (ind+1)%10 == 0:
+                print(ind+1," players info fixed")
+                #with open(filename, "a") as f:
+                    #json.dump(data,f)
+
+    with open(f'../data/players.json', 'a') as f:
+        json.dump(players_list,f)
+    print("done")
+
+    
 """
 mongoimport --db LeagueRank --collection players --jsonArray players_sample
 
