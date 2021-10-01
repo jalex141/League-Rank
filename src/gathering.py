@@ -41,8 +41,8 @@ def build_list(players_list):
             #players_list.remove(player)
 
         else:
-            players.append(fn.get_puuid(player))
-            players.append(fn.get_games_list(player))
+            players.append(fn.get_games_list(fn.get_puuid(player)))
+            #players.append(fn.get_games_list(player))
             #players_list[ind] = fn.usefull_info(player)
             
             if (ind+1)%10 == 0:
