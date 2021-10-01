@@ -51,10 +51,10 @@ def build_list(players_list):
                     #json.dump(data,f)
 
     with open(f'../data/players.json', 'a') as f:
-        json.dump(players_list,f)
+        json.dump(players,f)
     print("done")
 
-    
+
 """
 mongoimport --db LeagueRank --collection players --jsonArray players_sample
 
