@@ -1,12 +1,12 @@
-from getpass import getpass
+import dotenv
+import os
+dotenv.load_dotenv()
+API_KEY = os.getenv("API_KEY")
 
-from riotwatcher import LolWatcher, ApiError
-API_KEY = getpass("input your api key:  ")
-
+from riotwatcher import LolWatcher
 watcher = LolWatcher(API_KEY)
 
-
-#form url for API call
+#global variables
 base = "api.riotgames.com/lol/"
 endpoints = [""]
 queue = "RANKED_SOLO_5x5"

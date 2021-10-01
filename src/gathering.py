@@ -1,32 +1,21 @@
 import requests 
 import json
 import os
-from getpass import getpass
 import pandas as pd
 from pandas import json_normalize
 #import tweepy
 import time
 from datetime import datetime
+import sys
+sys.path.append('../')
+from config import *
 
 from src import functions as fn 
-from riotwatcher import LolWatcher, ApiError
+from pymongo import MongoClient
+client = MongoClient("localhost:27017")
+db = client.get_database("LeagueRank")
+c = db.get_collection("players")
 
-
-API_KEY = getpass("input your api key:  ")
-watcher = LolWatcher(API_KEY)
-my_region = 'euw1'
-
-response_riot = requests.get(f"https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/jalex141?api_key={API_KEY}")
-response_riot
-
-#form url for API call
-base = "api.riotgames.com/lol/"
-endpoints = [""]
-queue = "RANKED_SOLO_5x5"
-tier = ["CHALLENGER", "GRANDMASTER","MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER","BRONZE", "IRON"]
-division = ["I", "II", "III", "IV"]
-platform = ["br1","eun1","euw1","jp1","kr","la1","la2","na1","oc1","ru","tr1"]
-region = ["europe","asia","americas"]
 
 
 players_list = []
@@ -34,40 +23,60 @@ for tir in tier[3:]:
     for div in division:
         n=1000
         players_list += (fn.players_rank(tir,div,n))
+    print(tir, " done")
+    print(len(players_list), " players")
 for tir in tier[:3]:
     players_list += (fn.players_rank(tir,"I",n))
+    print(tir, " done")
+    print(len(players_list), " players")
+print("base list ", len(players_list)," players")
+
 
 for ind,player in enumerate(players_list):
-    players_list[ind] = fn.get_puuid(player)
-    players_list[ind] = fn.
+    if fn.get_puuid(player)== []:
+        print(f"player {player['summonerName']} no longer exists")
+        players_list.remove(player)
+
+    else:
+        players_list[ind] = fn.get_puuid(player)
+        players_list[ind] = fn.get_games_list(player)
+        players_list[ind] = fn.usefull_info(player)
+        
+        if (ind+1)%10 == 0:
+            print(ind+1," players info fixed")
+
+players_list.to_json("../data/players_sample", orient="records")
+print("done")
+"""
+mongoimport --db LeagueRank --collection players --jsonArray players_sample
+
+# Loading or Opening the json file
+with open('data.json') as file:
+    file_data = json.load(file)
+     
+# Inserting the loaded data in the Collection
+# if JSON contains data more than one entry
+# insert_many is used else inser_one is used
+if isinstance(file_data, list):
+    c.insert_many(file_data)  
+else:
+    c.insert_one(file_data)
+""" 
+
 
 ## make for loop to gather player data
 
 #getting rank list
-response_rank = requests.get(f"{url_rank}").json()
 
 ## make for loop to gather player data
 
 
-for player in response_rank:
-    player_data = {}
-    player_data['tier'] = player['tier']
-    player_data['rank'] = player['rank']
-    player_data['summonerName'] = player['summonerName']
-    player_data['leaguePoints'] = player['leaguePoints']
-    player_data['wins'] = player['wins']
-    player_data['losses'] = player['losses']
-    player_data['veteran'] = player['veteran']
-
-    player = watcher.summoner.by_name(my_region, player['summonerName'])
-    player_data['puuid'] = player['puuid']
-    player_data['summonerLevel'] = player['summonerLevel']
-## I can filter start index
+"""
     url_match_id2= f"https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{player['puuid']}/ids?type=ranked&start=0&count=50&api_key={API_KEY}"
     url_match_id = f"https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{player['puuid']}/ids?start=0&count=50&api_key={API_KEY}"
     match_ids = requests.get(url_match_id).json()
-    
-
+""" 
+"""
     player_stats=[]
     for match_id in match_ids:
         time.sleep(0.11)
@@ -88,3 +97,4 @@ for player in response_rank:
         player_stats.append(game_stats)
     df = pd.DataFrame(player_stats)
     df.to_csv(f"./data/player_data.csv")
+"""
