@@ -8,7 +8,21 @@ import time
 from datetime import datetime
 
 from config import *
+class Error(Exception):
+    pass
 
+class ExpiredError(Error):
+    """
+    Exception raised for expired key.
+
+    Attributes:
+        expression -- input expression in which the error occurred
+        message -- explanation of the error
+    """
+
+    def __init__(self, expression, message):
+        self.expression = expression
+        self.message = message
 
 
 
@@ -98,6 +112,8 @@ def api_call(url):
             print("BREAK!", url," ", response_riot)
             if response_riot.status_code == 404:
                 return [] 
+            elif response_riot.status_code == 403:
+                raise ExpiredError
             else:
                 with open(f'../data/trouble_players.json', 'a') as f:
                     json.dump(url,f)

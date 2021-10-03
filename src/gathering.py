@@ -64,7 +64,7 @@ def build_list(players_list):
         with open(f'../data/trouble_players.json', 'a') as f:
             json.dump(players,f)
 
-def buid_games(match_id_list):
+def build_games(match_id_list,from_,to):
     """
     calls riot Api to gather game data for a list of game ids
     takes a list of game ids
@@ -73,7 +73,7 @@ def buid_games(match_id_list):
 
     games = []
     try:    
-        for ind,match_id in enumerate(match_id_list):
+        for ind,match_id in enumerate(match_id_list[from_:to]):
             url_match = f"https://europe.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key={API_KEY}"
             match_detail = fn.api_call(url_match)
             if match_detail== []:
@@ -86,6 +86,14 @@ def buid_games(match_id_list):
                     print(ind+1," games data gathered")
                     #with open(filename, "a") as f:
                         #json.dump(data,f)
+                if (ind+1)%5000 == 0 or (ind+1)== len(match_id_list[from_:to]):
+                    print(ind+1," games data saved")
+                    with open(f'../games/games_{from_}-{to}.json', 'a') as f:
+                        json.dump(games,f)
+                    #with open(filename, "a") as f:
+                        #json.dump(data,f)
+                    games = []
+
         print("done")
         return games
             #with open("../data/trouble_games.txt", "wb") as fp:
