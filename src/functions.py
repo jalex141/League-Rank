@@ -96,5 +96,10 @@ def api_call(url):
         
         if response_riot.status_code != 429 and response_riot.status_code != 200:
             print("BREAK!", url," ", response_riot)
-            return [] 
+            if response_riot.status_code == 404:
+                return [] 
+            else:
+                with open(f'../data/trouble_players.json', 'a') as f:
+                    json.dump(url,f)
+                return []
     return response_riot.json()

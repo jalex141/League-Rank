@@ -10,6 +10,7 @@ import sys
 sys.path.append('../')
 from config import *
 from src import functions as fn 
+import pickle
 
 
 
@@ -33,30 +34,89 @@ def get_list():
 
 
 def build_list(players_list):
+    """
+    uses the players_list and calls the roit API for extra data and the game ids for the last 100 matches 
+    takes a players_list containing item['summonerName'] 
+    returns a list with extra info from those players whose data is available
+    """
     players = []
+    try:
+        for ind,player in enumerate(players_list):
+            if fn.get_puuid(player)== []:
+                print(f"player {player['summonerName']} no longer exists")
+                #players_list.remove(player)
 
-    for ind,player in enumerate(players_list):
-        if fn.get_puuid(player)== []:
-            print(f"player {player['summonerName']} no longer exists")
-            #players_list.remove(player)
+            else:
+                players.append(fn.get_games_list(fn.get_puuid(player)))
+                #players.append(fn.get_games_list(player))
+                #players_list[ind] = fn.usefull_info(player)
+                
+                if (ind+1)%10 == 0:
+                    print(ind+1," players info fixed")
+                    #with open(filename, "a") as f:
+                        #json.dump(data,f)
 
-        else:
-            players.append(fn.get_games_list(fn.get_puuid(player)))
-            #players.append(fn.get_games_list(player))
-            #players_list[ind] = fn.usefull_info(player)
+        with open(f'../data/players.json', 'a') as f:
+            json.dump(players,f)
+        print("done")
+    except:
+        print(ind+1," players info fixed")
+        with open(f'../data/trouble_players.json', 'a') as f:
+            json.dump(players,f)
+
+def buid_games(match_id_list):
+    """
+    calls riot Api to gather game data for a list of game ids
+    takes a list of game ids
+    returns a json with those games data
+    """
+
+    games = []
+    try:    
+        for ind,match_id in enumerate(match_id_list):
+            url_match = f"https://europe.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key={API_KEY}"
+            match_detail = fn.api_call(url_match)
+            if match_detail== []:
+                    print(f"match {match_id} can no longer be accessed")
+
+            else:
+                games.append(match_detail)
+                
+                if (ind+1)%10 == 0:
+                    print(ind+1," games data gathered")
+                    #with open(filename, "a") as f:
+                        #json.dump(data,f)
+        print("done")
+        return games
+            #with open("../data/trouble_games.txt", "wb") as fp:
+                #pickle.dump(games,fp)
             
-            if (ind+1)%10 == 0:
-                print(ind+1," players info fixed")
-                #with open(filename, "a") as f:
-                    #json.dump(data,f)
-
-    with open(f'../data/players.json', 'a') as f:
-        json.dump(players,f)
-    print("done")
-
+    except Exception:
+        print(Exception)
+        print(ind+1," players info fixed")
+        #with open(f'../data/trouble_games.json', 'a') as f:
+            #json.dump(games,f)
+        return games
 
 """
-mongoimport --db LeagueRank --collection players --jsonArray players_sample
+        game_stats={}
+        game_stats['gameDuration']=match_detail["info"]["gameDuration"]
+        game_stats['gameMode']=match_detail["info"]["gameMode"]
+        game_stats['gameStartTimestamp']= datetime.fromtimestamp(match_detail["info"]["gameStartTimestampddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"])
+
+
+
+        for player in match_detail["info"]["participants"]:
+            if player['summonerName'] == "jalex141":
+                for key,value in player.items():
+                    game_stats[key]= value
+        player_stats.append(game_stats)
+    df = pd.DataFrame(player_stats)
+    df.to_csv(f"./data/player_data.csv")
+"""
+
+"""
+mongoimport --db LeagueRank --collection players --jsonArray players
 
 # Loading or Opening the json file
 with open('data.json') as file:
