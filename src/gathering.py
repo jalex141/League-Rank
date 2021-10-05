@@ -82,7 +82,7 @@ def build_games(match_id_list,from_,to):
 
             else:
                 games.append(match_detail)
-                # changes
+                
                 if (ind+1)%10 == 0:
                     clear_output(wait=True)
                     print(ind+1," games data gathered")
@@ -97,7 +97,6 @@ def build_games(match_id_list,from_,to):
                     games = []
 
         print("done")
-        return games
             #with open("../data/trouble_games.txt", "wb") as fp:
                 #pickle.dump(games,fp)
             
@@ -106,7 +105,6 @@ def build_games(match_id_list,from_,to):
         print(ind+1," players info fixed")
         #with open(f'../data/trouble_games.json', 'a') as f:
             #json.dump(games,f)
-        return games
 
 """
         game_stats={}
@@ -177,4 +175,3 @@ else:
     df.to_csv(f"./data/player_data.csv")
 """
 
-print(x)
