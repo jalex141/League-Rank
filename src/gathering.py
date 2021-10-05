@@ -11,6 +11,7 @@ sys.path.append('../')
 from config import *
 from src import functions as fn 
 import pickle
+from IPython.display import clear_output
 
 
 
@@ -83,10 +84,11 @@ def build_games(match_id_list,from_,to):
                 games.append(match_detail)
                 
                 if (ind+1)%10 == 0:
+                    clear_output(wait=True)
                     print(ind+1," games data gathered")
                     #with open(filename, "a") as f:
                         #json.dump(data,f)
-                if (ind+1)%5000 == 0 or (ind+1)== len(match_id_list[from_:to]):
+                if (ind+1)%1000 == 0 or (ind+1)== len(match_id_list[from_:to]):
                     print(ind+1," games data saved")
                     with open(f'../games/games_{from_}-{to}.json', 'a') as f:
                         json.dump(games,f)
