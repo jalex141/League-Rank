@@ -82,7 +82,7 @@ def build_games(match_id_list,from_,to):
 
             else:
                 games.append(match_detail)
-                
+                # changes
                 if (ind+1)%10 == 0:
                     clear_output(wait=True)
                     print(ind+1," games data gathered")
