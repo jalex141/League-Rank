@@ -176,3 +176,5 @@ else:
     df = pd.DataFrame(player_stats)
     df.to_csv(f"./data/player_data.csv")
 """
+
+print(x)
