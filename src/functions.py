@@ -69,19 +69,19 @@ def usefull_info(player):
     recieves a dictionary with player data
     returns dic with data I can use 
     """
-    player_new={}
-    player_new['puuid'] = player['puuid']
-    player_new['summonerName'] = player['summonerName']
-    player_new['tier'] = player['tier']
-    player_new['division'] = player['rank']
-    player_new['leaguePoints'] = player['leaguePoints']
-    player_new['wins'] = player['wins']
-    player_new['losses'] = player['losses']
-    player_new['veteran'] = player['veteran']
-    player_new['freshBlood'] = player['freshBlood']
-    player_new['hotStreak'] = player['hotStreak']
-    player_new['summonerLevel'] = player['summonerLevel']
-    return player_new
+    player_stats={}
+    player_stats['summonerName'] = player['summonerName']
+    player_stats['tier'] = player['tier']
+    player_stats['division'] = player['rank']
+    player_stats['leaguePoints'] = player['leaguePoints']
+    player_stats['wins'] = player['wins']
+    player_stats['losses'] = player['losses']
+    player_stats['veteran'] = player['veteran']
+    player_stats['freshBlood'] = player['freshBlood']
+    player_stats['hotStreak'] = player['hotStreak']
+    player_stats['summonerLevel'] = player['summonerLevel']
+    
+    return player_stats
 
 def get_games_list(player):
     """
