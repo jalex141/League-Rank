@@ -2,10 +2,8 @@ import requests
 import json
 import os
 import pandas as pd
-from pandas import json_normalize
 #import tweepy
 import time
-from datetime import datetime
 import sys
 sys.path.append('../')
 from config import *

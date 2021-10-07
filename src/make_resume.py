@@ -1,14 +1,16 @@
-import sys
 import os
+import sys
 sys.path.append('../')
 from src import mongo_functions as mn
 from src import cleaning as cl
 from src import functions as fn 
 import pandas as pd
-
+from IPython.display import clear_output
+duration = 1  # seconds
+freq = 440  # Hz
 
 players_list = mn.get_players()
-
+n=0
 averege_stats=[]
 for player in players_list:
     player_stats_a= fn.usefull_info(player)
@@ -35,10 +37,17 @@ for player in players_list:
             player_stats.append(game_stats)
         df = pd.DataFrame(player_stats)
         chewed = cl.chew_data(df)
-        for key,value in chewed.items():
-            player_stats_a[key]= value
-        
+        if chewed == []:
+            n+=1
+            clear_output(wait=True)
+            print(len(averege_stats)," done")
+            print(n," failed")
+            continue
+        else:
+            for key,value in chewed.items():
+                player_stats_a[key]= value  
 
     averege_stats.append(player_stats_a)
 data_a = pd.DataFrame(averege_stats)
-data_a.to_csv("../data/dataframe.csv",index=False)
+data_a.to_csv("../data/dataframe2.csv",index=False)
+os.system('play -nq -t alsa synth {} sine {}'.format(duration, freq))
