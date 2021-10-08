@@ -89,7 +89,7 @@ def get_games_list(player):
     recieves a dictionary with player data
     returns same dic plus 'match_ids' list 
     """
-    url_match_id= f"https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{player['puuid']}/ids?type=ranked&start=0&count=100&api_key={API_KEY}"
+    url_match_id= f"https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{player['puuid']}/ids?type=ranked&start=0&count=25&api_key={API_KEY}"
     player["match_ids"] = api_call(url_match_id)
     #player["match_ids"] = requests.get(url_match_id).json()
     return player
@@ -119,3 +119,17 @@ def api_call(url):
                     json.dump(url,f)
                 return []
     return response_riot.json()
+
+
+def get_league(player_name):
+    """
+    calls the riot api to get 'puuid' and player level
+    recieves a player name
+    returns  dic with 'puuid' and player level
+    """
+    url_name = f"https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{player_name}?api_key={API_KEY}"
+    player_id =  api_call(url_name)["id"]
+    league_url = f"https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/{player_id}?api_key={API_KEY}"
+    player = api_call(league_url)[0]
+
+    return player

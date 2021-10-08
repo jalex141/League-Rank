@@ -51,3 +51,5 @@ for player in players_list:
 data_a = pd.DataFrame(averege_stats)
 data_a.to_csv("../data/dataframe2.csv",index=False)
 os.system('play -nq -t alsa synth {} sine {}'.format(duration, freq))
+
+

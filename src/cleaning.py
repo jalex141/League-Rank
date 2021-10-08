@@ -25,7 +25,11 @@ time_cols = ["assists","champExperience","damageDealtToBuildings","damageDealtTo
 "totalDamageDealtToChampions","totalMinionsKilled","totalTimeSpentDead","visionScore"]
 count_cols = ["gameStartTimestamp","championName"]
 percent_cols = ["firstBloodAssist","firstBloodKill","win","timePlayed"]
-
+d = {24: 'DIAMONDI', 23: 'DIAMONDII', 22: 'DIAMONDIII', 21: 'DIAMONDIV', 20: 'PLATINUMI',
+ 19: 'PLATINUMII', 18: 'PLATINUMIII', 12: 'SILVERI', 11: 'SILVERII', 10: 'SILVERIII',
+ 9: 'SILVERIV', 8: 'BRONZEI', 7: 'BRONZEII', 6: 'BRONZEIII', 5: 'BRONZEIV', 4: 'IRONI',
+ 3: 'IRONII', 2: 'IRONIII', 15: 'GOLDII', 14: 'GOLDIII', 13: 'GOLDIV', 1: 'IRONIV',
+ 27: 'CHALLENGERI', 26: 'GRANDMASTERI', 25: 'MASTERI', 17: 'PLATINUMIV', 16: 'GOLDI'}
 
 def chew_data(dfr):
     """

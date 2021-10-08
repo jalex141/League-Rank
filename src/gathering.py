@@ -10,6 +10,8 @@ from config import *
 from src import functions as fn 
 import pickle
 from IPython.display import clear_output
+from src import cleaning as cl
+
 
 
 
@@ -63,6 +65,39 @@ def build_list(players_list):
         with open(f'../data/trouble_players.json', 'a') as f:
             json.dump(players,f)
 
+
+def get_player(name):
+    """
+    gets game data for a single player
+    takes a name 
+    returns player game stats
+    """
+    player = fn.get_league(name)
+    player =fn.get_games_list(fn.get_puuid(player))
+    player_stats=[]
+    match_ids = player["match_ids"]
+    for game in match_ids:
+        url_match = f"https://europe.api.riotgames.com/lol/match/v5/matches/{game}?api_key={API_KEY}"
+        match_detail = fn.api_call(url_match)
+
+        game_stats={}
+        game_stats['gameDuration']=match_detail["info"]["gameDuration"]
+        game_stats['gameMode']=match_detail["info"]["gameMode"]
+        game_stats['gameStartTimestamp']= (match_detail["info"]["gameStartTimestamp"])
+
+
+        for player in match_detail["info"]["participants"]:
+            if player['summonerName'] == name:
+                for key,value in player.items():
+                    game_stats[key]= value
+        player_stats.append(game_stats)
+    df = pd.DataFrame(player_stats)
+    df.to_csv("./data/playerdata.csv",index=False)
+    return df
+
+
+
+
 def build_games(match_id_list,from_,to):
     """
     calls riot Api to gather game data for a list of game ids
@@ -104,72 +139,39 @@ def build_games(match_id_list,from_,to):
         #with open(f'../data/trouble_games.json', 'a') as f:
             #json.dump(games,f)
 
-"""
+def player_resume(name):
+    """
+    creates the resume for a player
+    takes a name
+    returns a pd series
+    """
+    player = fn.get_league(name)
+    player =fn.get_games_list(fn.get_puuid(player))
+    averege_stats=[]
+    player_stats_a= fn.usefull_info(player)
+    player_stats = []
+    match_ids = player["match_ids"]
+    for game in match_ids:
+        url_match = f"https://europe.api.riotgames.com/lol/match/v5/matches/{game}?api_key={API_KEY}"
+        match_detail = fn.api_call(url_match)
+        
+
         game_stats={}
         game_stats['gameDuration']=match_detail["info"]["gameDuration"]
         game_stats['gameMode']=match_detail["info"]["gameMode"]
-        game_stats['gameStartTimestamp']= datetime.fromtimestamp(match_detail["info"]["gameStartTimestampddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"])
+        game_stats['gameStartTimestamp']= (match_detail["info"]["gameStartTimestamp"])
 
-
-
-        for player in match_detail["info"]["participants"]:
-            if player['summonerName'] == "jalex141":
-                for key,value in player.items():
+        for participant in match_detail["info"]["participants"]:
+            if participant['summonerName'] == player['summonerName']:
+                for key,value in participant.items():
                     game_stats[key]= value
         player_stats.append(game_stats)
     df = pd.DataFrame(player_stats)
-    df.to_csv(f"./data/player_data.csv")
-"""
-
-"""
-mongoimport --db LeagueRank --collection players --jsonArray players
-
-# Loading or Opening the json file
-with open('data.json') as file:
-    file_data = json.load(file)
-     
-# Inserting the loaded data in the Collection
-# if JSON contains data more than one entry
-# insert_many is used else inser_one is used
-if isinstance(file_data, list):
-    c.insert_many(file_data)  
-else:
-    c.insert_one(file_data)
-""" 
-
-
-## make for loop to gather player data
-
-#getting rank list
-
-## make for loop to gather player data
-
-
-"""
-    url_match_id2= f"https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{player['puuid']}/ids?type=ranked&start=0&count=50&api_key={API_KEY}"
-    url_match_id = f"https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{player['puuid']}/ids?start=0&count=50&api_key={API_KEY}"
-    match_ids = requests.get(url_match_id).json()
-""" 
-"""
-    player_stats=[]
-    for match_id in match_ids:
-        time.sleep(0.11)
-
-        url_match = f"https://europe.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key={API_KEY}"
-        match_detail = requests.get(url_match).json()
-        game_stats={}
-        game_stats['gameDuration']=match_detail["info"]["gameDuration"]
-        game_stats['gameMode']=match_detail["info"]["gameMode"]
-        game_stats['gameStartTimestamp']= datetime.fromtimestamp(match_detail["info"]["gameStartTimestampddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"])
-
-
-
-        for player in match_detail["info"]["participants"]:
-            if player['summonerName'] == "jalex141":
-                for key,value in player.items():
-                    game_stats[key]= value
-        player_stats.append(game_stats)
-    df = pd.DataFrame(player_stats)
-    df.to_csv(f"./data/player_data.csv")
-"""
+    chewed = cl.chew_data(df)
+    for key,value in chewed.items():
+            player_stats_a[key]= value  
+    averege_stats.append(player_stats_a)
+    data_a = pd.DataFrame(averege_stats)
+    data_a.to_csv("./data/plyerresume.csv",index=False)
+    return data_a
 
